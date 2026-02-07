@@ -1642,9 +1642,15 @@
                         <label class="form-label" for="email">Work Email</label>
                         <input type="email" id="email" class="form-input" placeholder="jane@company.com" required>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="company">Company</label>
-                        <input type="text" id="company" class="form-input" placeholder="Company name">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                        <div class="form-group">
+                            <label class="form-label" for="company">Company</label>
+                            <input type="text" id="company" class="form-input" placeholder="Company name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone</label>
+                            <input type="tel" id="phone" class="form-input" placeholder="+1 555 123 4567" autocomplete="tel" inputmode="tel">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="message">Message</label>
@@ -1739,7 +1745,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <div class="footer-copy">© 2025 CISO AI Pty Ltd. All rights reserved. ABN pending.</div>
+            <div class="footer-copy">© 2026 CINTELIS Pty Limited. All rights reserved. ABN 51 638 482 970.</div>
             <div class="footer-socials">
                 <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
                 <a href="#" aria-label="X / Twitter"><i class="fab fa-x-twitter"></i></a>
@@ -1881,6 +1887,7 @@ async function handleContactSubmit(e) {
     const lastName = document.getElementById('lastName').value.trim();
     const email = document.getElementById('email').value.trim();
     const company = document.getElementById('company').value.trim();
+    const phone = document.getElementById('phone').value.trim();
     const message = document.getElementById('message').value.trim();
     const now = new Date().toLocaleString('en-AU', { dateStyle: 'full', timeStyle: 'short', timeZone: 'Australia/Sydney' });
 
@@ -1906,6 +1913,10 @@ async function handleContactSubmit(e) {
                     <tr>
                         <td style="padding:10px 12px;background:#f8fafc;font-weight:600;vertical-align:top;border-bottom:1px solid #e2e8f0;">Company</td>
                         <td style="padding:10px 12px;background:#f8fafc;border-bottom:1px solid #e2e8f0;">${company || '<span style="color:#94a3b8;">Not provided</span>'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px 12px;font-weight:600;vertical-align:top;border-bottom:1px solid #e2e8f0;">Phone</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;">${phone || '<span style="color:#94a3b8;">Not provided</span>'}</td>
                     </tr>
                     <tr>
                         <td style="padding:10px 12px;font-weight:600;vertical-align:top;">Message</td>
