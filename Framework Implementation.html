@@ -622,7 +622,7 @@
             updateProgress();
             
             // Auto-save every 30 seconds
-            setInterval(saveProgress, 30000);
+            setInterval(() => saveProgress({ silent: true }), 30000);
         });
 
         // Render the checklist
@@ -667,7 +667,7 @@
                     checkbox.addEventListener('change', function() {
                         updateItemState(item.id, this.checked);
                         updateProgress();
-                        saveProgress();
+                        saveProgress({ silent: true });
                     });
                 });
             });
@@ -695,17 +695,14 @@
             if (phaseIndex !== -1) {
                 const phase = checklistData[phaseIndex];
                 const completedInPhase = phase.items.filter(item => {
-                    const savedState = localStorage.getItem(item.id);
-                    return savedState === 'true';
+                    const checkbox = document.getElementById(item.id);
+                    return checkbox && checkbox.checked;
                 }).length;
-                
-                // Add one for the item being checked, subtract one for item being unchecked
-                const newCount = isChecked ? completedInPhase + 1 : completedInPhase - 1;
                 
                 // Find the phase card and update count
                 const phaseCards = document.querySelectorAll('.phase-card');
                 const phaseCountElement = phaseCards[phaseIndex].querySelector('.phase-count');
-                phaseCountElement.textContent = `${newCount}/${phase.items.length}`;
+                phaseCountElement.textContent = `${completedInPhase}/${phase.items.length}`;
             }
         }
 
@@ -723,7 +720,8 @@
             checklistData.forEach(phase => {
                 phase.items.forEach(item => {
                     total++;
-                    if (localStorage.getItem(item.id) === 'true') {
+                    const checkbox = document.getElementById(item.id);
+                    if (checkbox && checkbox.checked) {
                         completed++;
                     }
                 });
@@ -787,7 +785,8 @@
         }
 
         // Save progress to localStorage
-        function saveProgress() {
+        function saveProgress(options = {}) {
+            const { silent = false } = options;
             checklistData.forEach(phase => {
                 phase.items.forEach(item => {
                     const checkbox = document.getElementById(item.id);
@@ -797,7 +796,9 @@
                 });
             });
             
-            showNotification('Progress saved successfully!');
+            if (!silent) {
+                showNotification('Progress saved successfully!');
+            }
         }
 
         // Load progress from localStorage
