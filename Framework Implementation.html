@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRC Consultant: Cybersecurity Governance Framework Checklist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #7f8c8d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .program-info {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--light);
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .progress-container {
+            padding: 25px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background-color: #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--secondary), var(--success));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 6px;
+        }
+        
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .phases {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 25px;
+        }
+        
+        .phase-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .phase-header {
+            padding: 18px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .phase-0 .phase-header { background-color: #8e44ad; }
+        .phase-1 .phase-header { background-color: #3498db; }
+        .phase-2 .phase-header { background-color: #2ecc71; }
+        .phase-3 .phase-header { background-color: #f39c12; }
+        
+        .phase-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .phase-count {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .checklist {
+            padding: 20px;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            margin-right: 15px;
+            margin-top: 5px;
+            cursor: pointer;
+            transform: scale(1.3);
+        }
+        
+        .checklist-item label {
+            cursor: pointer;
+            flex-grow: 1;
+            user-select: none;
+        }
+        
+        .checklist-item.completed label {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+        
+        .item-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .checklist-item.expanded .item-desc {
+            display: block;
+        }
+        
+        .expand-btn {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        
+        .certification-selector {
+            padding: 25px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+        
+        .cert-options {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .cert-option {
+            flex: 1;
+            min-width: 250px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cert-option:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .cert-option.selected {
+            border-color: var(--secondary);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .cert-option h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .cert-option ul {
+            padding-left: 20px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .cert-option li {
+            margin-bottom: 5px;
+        }
+        
+        .controls {
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--light);
+            border-top: 1px solid #ddd;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #6c7b7d;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        @media (max-width: 768px) {
+            .phases {
+                grid-template-columns: 1fr;
+            }
+            
+            .program-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+        
+        .export-section {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            display: none;
+        }
+        
+        .export-section.show {
+            display: block;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            margin-top: 10px;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: var(--success);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .priority-tag {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            color: white;
+        }
+        
+        .priority-high { background-color: var(--danger); }
+        .priority-medium { background-color: var(--warning); }
+        .priority-low { background-color: var(--success); }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            color: var(--secondary);
+            cursor: help;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: var(--dark);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-shield-alt"></i> Cybersecurity Governance Framework Implementation</h1>
+            <p class="subtitle">A comprehensive checklist for GRC Consultants managing security uplift programs towards ISO 27001/SOC 2 certification</p>
+        </header>
+        
+        <div class="program-info">
+            <div>
+                <h3>Program Status</h3>
+                <p><i class="fas fa-user-tie"></i> Lead GRC Consultant</p>
+            </div>
+            <div>
+                <h3>Certification Target</h3>
+                <p><i class="fas fa-certificate"></i> ISO 27001 & SOC 2 (Undecided)</p>
+            </div>
+            <div>
+                <h3>Framework</h3>
+                <p><i class="fas fa-layer-group"></i> NIST CSF 2.0 / ISO 27001</p>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <h3>Implementation Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-stats">
+                <span id="completedCount">0</span> of <span id="totalCount">0</span> items completed
+                <span id="percentage">0%</span>
+            </div>
+        </div>
+        
+        <div class="phases" id="phasesContainer">
+            <!-- Phases will be dynamically inserted here -->
+        </div>
+        
+        <div class="certification-selector">
+            <h3>Certification Decision Point <span class="tooltip">(i)<span class="tooltiptext">Based on your framework implementation progress, you can now make an informed decision about certification path</span></span></h3>
+            <div class="cert-options">
+                <div class="cert-option" id="isoOption">
+                    <h3><i class="fas fa-globe-europe"></i> ISO 27001</h3>
+                    <ul>
+                        <li>Globally recognized ISMS certification</li>
+                        <li>Process-oriented, risk-based approach</li>
+                        <li>Ideal for European markets & government contracts</li>
+                        <li>Demonstrates security maturity</li>
+                    </ul>
+                </div>
+                <div class="cert-option" id="socOption">
+                    <h3><i class="fas fa-cloud"></i> SOC 2 Type II</h3>
+                    <ul>
+                        <li>U.S.-focused service organization report</li>
+                        <li>Flexible (choose Trust Services Criteria)</li>
+                        <li>Essential for SaaS/cloud service providers</li>
+                        <li>Client assurance for security controls</li>
+                    </ul>
+                </div>
+                <div class="cert-option" id="bothOption">
+                    <h3><i class="fas fa-sync-alt"></i> Both Certifications</h3>
+                    <ul>
+                        <li>ISO for internal ISMS & global recognition</li>
+                        <li>SOC 2 for U.S. client assurance</li>
+                        <li>Leverage common framework for efficiency</li>
+                        <li>Maximize market access</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="export-section" id="exportSection">
+            <h3>Progress Report & Next Steps</h3>
+            <textarea id="exportText" readonly></textarea>
+            <button onclick="copyToClipboard()" class="btn-secondary"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+        </div>
+        
+        <div class="controls">
+            <div>
+                <button onclick="resetChecklist()" class="btn-secondary"><i class="fas fa-redo"></i> Reset Checklist</button>
+                <button onclick="toggleExport()" class="btn-secondary"><i class="fas fa-file-export"></i> Generate Report</button>
+            </div>
+            <div>
+                <button onclick="saveProgress()" class="btn-success"><i class="fas fa-save"></i> Save Progress</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <span id="notificationText">Progress saved successfully!</span>
+    </div>
+
+    <script>
+        // Checklist data structure
+        const checklistData = [
+            {
+                phase: 0,
+                title: "Phase 0: Pre-Work & Foundation",
+                items: [
+                    {
+                        id: "p0i1",
+                        text: "Secure Executive Sponsorship & Charter",
+                        description: "Formalize program with C-level sponsor, establish steering committee with key stakeholders.",
+                        priority: "high"
+                    },
+                    {
+                        id: "p0i2",
+                        text: "Define & Understand Business Goals and Drivers",
+                        description: "Conduct workshops with business unit leaders to document certification drivers and business objectives.",
+                        priority: "high"
+                    },
+                    {
+                        id: "p0i3",
+                        text: "Articulate the Organizational Risk Appetite",
+                        description: "Facilitate session with Steering Committee/Board to define measurable Risk Appetite Statements.",
+                        priority: "high"
+                    }
+                ]
+            },
+            {
+                phase: 1,
+                title: "Phase 1: Assess & Define",
+                items: [
+                    {
+                        id: "p1i1",
+                        text: "Gap Assessment Against Unified Control Framework",
+                        description: "Perform detailed gap analysis against NIST CSF 2.0 or ISO 27001 structure covering people, process, technology.",
+                        priority: "high"
+                    },
+                    {
+                        id: "p1i2",
+                        text: "Scope Definition for the Governance Framework",
+                        description: "Define organizational scope (entire enterprise, division, product line) and technological scope.",
+                        priority: "high"
+                    },
+                    {
+                        id: "p1i3",
+                        text: "Develop Core Governance Framework Documents",
+                        description: "Create Cybersecurity Policy Hierarchy: Tier 1 Charter, Tier 2 Policies, Tier 3 Standards & Procedures.",
+                        priority: "medium"
+                    },
+                    {
+                        id: "p1i4",
+                        text: "Draft Key Policies",
+                        description: "Create Information Security Policy, Risk Management Policy, Access Control Policy, Incident Response Policy, Business Continuity Policy.",
+                        priority: "medium"
+                    }
+                ]
+            },
+            {
+                phase: 2,
+                title: "Phase 2: Build & Implement",
+                items: [
+                    {
+                        id: "p2i1",
+                        text: "Establish the Risk Management Function",
+                        description: "Implement formal Risk Assessment & Treatment Methodology (ISO 27005/NIST RMF), create Risk Register.",
+                        priority: "high"
+                    },
+                    {
+                        id: "p2i2",
+                        text: "Align Risk Treatment with Risk Appetite",
+                        description: "Evaluate each risk against Risk Appetite Statements; justify treatment plans (Mitigate, Accept, Transfer, Avoid).",
+                        priority: "high"
+                    },
+                    {
+                        id: "p2i3",
+                        text: "Implement Key Governance Processes",
+                        description: "Establish processes for Risk Treatment Planning, Third-Party Risk Management, Compliance & Assurance Management.",
+                        priority: "medium"
+                    },
+                    {
+                        id: "p2i4",
+                        text: "Define Performance Measurement Metrics",
+                        description: "Create Key Risk Indicators (KRIs) and Key Performance Indicators (KPIs) for security program reporting.",
+                        priority: "medium"
+                    },
+                    {
+                        id: "p2i5",
+                        text: "Build Roles & Responsibilities Matrix",
+                        description: "Create RACI matrix defining who is Responsible, Accountable, Consulted, Informed for each control/process.",
+                        priority: "low"
+                    }
+                ]
+            },
+            {
+                phase: 3,
+                title: "Phase 3: Operate, Certify & Evolve",
+                items: [
+                    {
+                        id: "p3i1",
+                        text: "Operationalize the Framework",
+                        description: "Integrate governance into BAU activities: procurement, SDLC, M&A due diligence. Conduct role-based training.",
+                        priority: "medium"
+                    },
+                    {
+                        id: "p3i2",
+                        text: "Make Certification Decision",
+                        description: "Based on business drivers and framework maturity, decide on ISO 27001, SOC 2, or both.",
+                        priority: "medium"
+                    },
+                    {
+                        id: "p3i3",
+                        text: "Prepare for Certification/Audit",
+                        description: "For ISO: Focus on PDCA cycle evidence. For SOC 2: Focus on evidence collection over audit period.",
+                        priority: "high"
+                    },
+                    {
+                        id: "p3i4",
+                        text: "Implement Continuous Improvement",
+                        description: "Conduct internal audits & management reviews annually. Update risk assessment based on findings.",
+                        priority: "low"
+                    },
+                    {
+                        id: "p3i5",
+                        text: "Revisit Business Goals & Risk Appetite",
+                        description: "Annual review with Steering Committee to ensure alignment with evolving business objectives.",
+                        priority: "low"
+                    }
+                ]
+            }
+        ];
+
+        // Certification options
+        let selectedCert = null;
+
+        // Initialize checklist
+        document.addEventListener('DOMContentLoaded', function() {
+            renderChecklist();
+            loadProgress();
+            setupCertificationSelector();
+            updateProgress();
+            
+            // Auto-save every 30 seconds
+            setInterval(saveProgress, 30000);
+        });
+
+        // Render the checklist
+        function renderChecklist() {
+            const container = document.getElementById('phasesContainer');
+            container.innerHTML = '';
+            
+            checklistData.forEach(phase => {
+                const phaseCard = document.createElement('div');
+                phaseCard.className = `phase-card phase-${phase.phase}`;
+                
+                const completedInPhase = phase.items.filter(item => {
+                    const savedState = localStorage.getItem(item.id);
+                    return savedState === 'true';
+                }).length;
+                
+                phaseCard.innerHTML = `
+                    <div class="phase-header">
+                        <div class="phase-title">${phase.title}</div>
+                        <div class="phase-count">${completedInPhase}/${phase.items.length}</div>
+                    </div>
+                    <div class="checklist">
+                        ${phase.items.map(item => `
+                            <div class="checklist-item" id="item-${item.id}">
+                                <input type="checkbox" id="${item.id}" ${localStorage.getItem(item.id) === 'true' ? 'checked' : ''}>
+                                <label for="${item.id}">
+                                    ${item.text}
+                                    <span class="priority-tag priority-${item.priority}">${item.priority.toUpperCase()}</span>
+                                </label>
+                                <button class="expand-btn" onclick="toggleDescription('${item.id}')">Details</button>
+                                <div class="item-desc">${item.description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(phaseCard);
+                
+                // Add event listeners to checkboxes
+                phase.items.forEach(item => {
+                    const checkbox = document.getElementById(item.id);
+                    checkbox.addEventListener('change', function() {
+                        updateItemState(item.id, this.checked);
+                        updateProgress();
+                        saveProgress();
+                    });
+                });
+            });
+            
+            // Update total count
+            const totalItems = checklistData.reduce((sum, phase) => sum + phase.items.length, 0);
+            document.getElementById('totalCount').textContent = totalItems;
+        }
+
+        // Update item state and UI
+        function updateItemState(itemId, isChecked) {
+            const itemElement = document.getElementById(`item-${itemId}`);
+            
+            if (isChecked) {
+                itemElement.classList.add('completed');
+            } else {
+                itemElement.classList.remove('completed');
+            }
+            
+            // Update phase count
+            const phaseIndex = checklistData.findIndex(phase => 
+                phase.items.some(item => item.id === itemId)
+            );
+            
+            if (phaseIndex !== -1) {
+                const phase = checklistData[phaseIndex];
+                const completedInPhase = phase.items.filter(item => {
+                    const savedState = localStorage.getItem(item.id);
+                    return savedState === 'true';
+                }).length;
+                
+                // Add one for the item being checked, subtract one for item being unchecked
+                const newCount = isChecked ? completedInPhase + 1 : completedInPhase - 1;
+                
+                // Find the phase card and update count
+                const phaseCards = document.querySelectorAll('.phase-card');
+                const phaseCountElement = phaseCards[phaseIndex].querySelector('.phase-count');
+                phaseCountElement.textContent = `${newCount}/${phase.items.length}`;
+            }
+        }
+
+        // Toggle item description
+        function toggleDescription(itemId) {
+            const itemElement = document.getElementById(`item-${itemId}`);
+            itemElement.classList.toggle('expanded');
+        }
+
+        // Update progress bar and statistics
+        function updateProgress() {
+            let completed = 0;
+            let total = 0;
+            
+            checklistData.forEach(phase => {
+                phase.items.forEach(item => {
+                    total++;
+                    if (localStorage.getItem(item.id) === 'true') {
+                        completed++;
+                    }
+                });
+            });
+            
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('percentage').textContent = `${percentage}%`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            
+            // Update certification recommendation based on progress
+            if (percentage > 50) {
+                document.getElementById('bothOption').classList.add('selected');
+                selectedCert = 'both';
+            }
+        }
+
+        // Setup certification selector
+        function setupCertificationSelector() {
+            const isoOption = document.getElementById('isoOption');
+            const socOption = document.getElementById('socOption');
+            const bothOption = document.getElementById('bothOption');
+            
+            isoOption.addEventListener('click', () => selectCertification('iso'));
+            socOption.addEventListener('click', () => selectCertification('soc'));
+            bothOption.addEventListener('click', () => selectCertification('both'));
+            
+            // Load saved certification choice
+            const savedCert = localStorage.getItem('selectedCertification');
+            if (savedCert) {
+                selectCertification(savedCert);
+            }
+        }
+
+        // Select certification
+        function selectCertification(certType) {
+            // Remove selected class from all options
+            document.querySelectorAll('.cert-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to chosen option
+            document.getElementById(`${certType}Option`).classList.add('selected');
+            
+            selectedCert = certType;
+            localStorage.setItem('selectedCertification', certType);
+            
+            showNotification(`Certification preference saved: ${getCertName(certType)}`);
+        }
+
+        // Get certification name
+        function getCertName(certType) {
+            switch(certType) {
+                case 'iso': return 'ISO 27001';
+                case 'soc': return 'SOC 2 Type II';
+                case 'both': return 'Both ISO 27001 and SOC 2';
+                default: return 'Undecided';
+            }
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            checklistData.forEach(phase => {
+                phase.items.forEach(item => {
+                    const checkbox = document.getElementById(item.id);
+                    if (checkbox) {
+                        localStorage.setItem(item.id, checkbox.checked);
+                    }
+                });
+            });
+            
+            showNotification('Progress saved successfully!');
+        }
+
+        // Load progress from localStorage
+        function loadProgress() {
+            checklistData.forEach(phase => {
+                phase.items.forEach(item => {
+                    const savedState = localStorage.getItem(item.id);
+                    const checkbox = document.getElementById(item.id);
+                    if (checkbox && savedState !== null) {
+                        checkbox.checked = savedState === 'true';
+                        updateItemState(item.id, checkbox.checked);
+                    }
+                });
+            });
+        }
+
+        // Reset checklist
+        function resetChecklist() {
+            if (confirm('Are you sure you want to reset the entire checklist? This cannot be undone.')) {
+                checklistData.forEach(phase => {
+                    phase.items.forEach(item => {
+                        localStorage.removeItem(item.id);
+                        const checkbox = document.getElementById(item.id);
+                        if (checkbox) {
+                            checkbox.checked = false;
+                            updateItemState(item.id, false);
+                        }
+                    });
+                });
+                
+                localStorage.removeItem('selectedCertification');
+                selectedCert = null;
+                document.querySelectorAll('.cert-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                updateProgress();
+                showNotification('Checklist reset successfully!');
+            }
+        }
+
+        // Toggle export section
+        function toggleExport() {
+            const exportSection = document.getElementById('exportSection');
+            exportSection.classList.toggle('show');
+            
+            if (exportSection.classList.contains('show')) {
+                generateReport();
+            }
+        }
+
+        // Generate progress report
+        function generateReport() {
+            let completed = 0;
+            let total = 0;
+            let report = `CYBERSECURITY GOVERNANCE FRAMEWORK IMPLEMENTATION REPORT\n`;
+            report += `Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}\n`;
+            report += `=============================================\n\n`;
+            
+            checklistData.forEach(phase => {
+                let phaseCompleted = 0;
+                report += `${phase.title}\n`;
+                report += `${'='.repeat(phase.title.length)}\n`;
+                
+                phase.items.forEach(item => {
+                    total++;
+                    const isCompleted = localStorage.getItem(item.id) === 'true';
+                    if (isCompleted) {
+                        completed++;
+                        phaseCompleted++;
+                    }
+                    
+                    report += `[${isCompleted ? '✓' : ' '}] ${item.text} (${item.priority} priority)\n`;
+                });
+                
+                report += `Phase completion: ${phaseCompleted}/${phase.items.length} items\n\n`;
+            });
+            
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            report += `OVERALL PROGRESS: ${completed}/${total} items (${percentage}%)\n\n`;
+            
+            report += `CERTIFICATION PREFERENCE: ${selectedCert ? getCertName(selectedCert) : 'Not yet selected'}\n\n`;
+            
+            report += `NEXT RECOMMENDED STEPS:\n`;
+            report += `1. ${percentage < 30 ? 'Focus on Phase 0 & 1 foundational items' : percentage < 70 ? 'Continue with Phase 2 implementation tasks' : 'Prepare for audit/certification process'}\n`;
+            report += `2. ${!selectedCert ? 'Make certification decision based on business drivers' : `Proceed with ${getCertName(selectedCert)} preparation`}\n`;
+            report += `3. Schedule steering committee review for risk appetite alignment\n`;
+            report += `4. Document evidence for implemented controls\n`;
+            
+            document.getElementById('exportText').value = report;
+        }
+
+        // Copy report to clipboard
+        function copyToClipboard() {
+            const textarea = document.getElementById('exportText');
+            textarea.select();
+            document.execCommand('copy');
+            showNotification('Report copied to clipboard!');
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

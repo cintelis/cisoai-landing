@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO 31000 Risk Assessment: SharePoint for PII at Canonical</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #772953 0%, #e95420 100%);
+            color: white;
+            padding: 25px 30px;
+            border-bottom: 5px solid #333;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .iso-badge {
+            display: inline-block;
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        h2 {
+            color: #772953;
+            font-size: 22px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e95420;
+        }
+        
+        h3 {
+            color: #333;
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 2px;
+            margin: 20px 0;
+            border: 2px solid #333;
+            width: 100%;
+            height: 300px;
+        }
+        
+        .matrix-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+        }
+        
+        .cell-high {
+            background-color: #d32f2f;
+            color: white;
+        }
+        
+        .cell-medium-high {
+            background-color: #ff9800;
+            color: black;
+        }
+        
+        .cell-medium {
+            background-color: #ffeb3b;
+            color: black;
+        }
+        
+        .cell-low-medium {
+            background-color: #8bc34a;
+            color: black;
+        }
+        
+        .cell-low {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        .matrix-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background-color: #f5f5f5;
+        }
+        
+        .control-group {
+            background-color: #f9f9f9;
+            border-left: 4px solid #772953;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .fair-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .range-value {
+            font-weight: bold;
+            color: #772953;
+        }
+        
+        .simulation-controls {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background-color: #772953;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #5e2042;
+        }
+        
+        .risk-treatment {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .treatment-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .treatment-card h4 {
+            color: #772953;
+            margin-bottom: 10px;
+        }
+        
+        .results {
+            background-color: #f0f7ff;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .risk-level {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .high-risk {
+            background-color: #d32f2f;
+            color: white;
+        }
+        
+        .medium-risk {
+            background-color: #ff9800;
+            color: black;
+        }
+        
+        .low-risk {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .fair-inputs, .risk-treatment {
+                grid-template-columns: 1fr;
+            }
+            
+            .risk-matrix {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ISO 31000 Risk Assessment: Managed File Storage (SharePoint) for PII Data</h1>
+            <div class="subtitle">Canonical - PSP Portal Information Staging</div>
+            <div class="iso-badge">ISO 31000:2018 Compliant</div>
+        </header>
+        
+        <div class="content">
+            <!-- Section 1: Context Establishment -->
+            <section class="section">
+                <h2>1. Context Establishment (ISO 31000 Clause 6.3)</h2>
+                <p><strong>Assessment Scope:</strong> Evaluation of risks associated with using Microsoft SharePoint Online as a managed file storage solution for staging Personally Identifiable Information (PII) data from the PSP (Partner Support Portal) at Canonical.</p>
+                <p><strong>Risk Criteria:</strong> Risk will be evaluated based on potential impact to confidentiality, integrity, and availability of PII data, regulatory compliance (GDPR, CCPA), and Canonical's reputation.</p>
+                <p><strong>Stakeholders:</strong> Security Risk Management Team, Data Protection Officer, IT Operations, Legal & Compliance, Product Teams.</p>
+            </section>
+            
+            <!-- Section 2: Risk Identification -->
+            <section class="section">
+                <h2>2. Risk Identification (ISO 31000 Clause 6.4.2)</h2>
+                <p>Identified risks associated with SharePoint for PII data staging:</p>
+                
+                <div class="control-group">
+                    <h3>RISK-01: Unauthorized Access to PII Data</h3>
+                    <p><strong>Description:</strong> External threat actors or malicious insiders gain access to SharePoint repositories containing PII data.</p>
+                    <p><strong>Potential Impact:</strong> Data breach, regulatory fines, reputational damage.</p>
+                </div>
+                
+                <div class="control-group">
+                    <h3>RISK-02: Data Exfiltration via Sharing Links</h3>
+                    <p><strong>Description:</strong> Misconfigured sharing permissions or overly permissive sharing links allow unauthorized access to PII data.</p>
+                    <p><strong>Potential Impact:</strong> Unauthorized data disclosure, GDPR violations.</p>
+                </div>
+                
+                <div class="control-group">
+                    <h3>RISK-03: Insider Threat - Privilege Misuse</h3>
+                    <p><strong>Description:</strong> Authorized employees with access to PII data misuse their privileges for unauthorized purposes.</p>
+                    <p><strong>Potential Impact:</strong> Internal data breach, compliance violations.</p>
+                </div>
+                
+                <div class="control-group">
+                    <h3>RISK-04: Data Loss or Corruption</h3>
+                    <p><strong>Description:</strong> Accidental deletion, ransomware encryption, or corruption of PII data stored in SharePoint.</p>
+                    <p><strong>Potential Impact:</strong> Loss of critical business data, operational disruption.</p>
+                </div>
+                
+                <div class="control-group">
+                    <h3>RISK-05: Integration & Transfer Risks</h3>
+                    <p><strong>Description:</strong> Vulnerabilities in the data transfer process between PSP portal and SharePoint, or insecure API integrations.</p>
+                    <p><strong>Potential Impact:</strong> Data interception, integrity compromise during transfer.</p>
+                </div>
+            </section>
+            
+            <!-- Section 3: Risk Analysis with FAIR Model -->
+            <section class="section">
+                <h2>3. Risk Analysis with FAIR Model & Sensitivity Analysis</h2>
+                <p>Applying Factor Analysis of Information Risk (FAIR) to quantify risk in financial terms:</p>
+                
+                <div class="fair-inputs">
+                    <div class="input-group">
+                        <label for="threatEventFrequency">Threat Event Frequency (TEF): <span class="range-value" id="tef-value">12</span> events/year</label>
+                        <input type="range" id="threatEventFrequency" min="1" max="50" value="12" step="1">
+                        <small>How often threat agents contact the SharePoint environment</small>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="vulnerability">Vulnerability (Vuln): <span class="range-value" id="vuln-value">0.15</span> probability</label>
+                        <input type="range" id="vulnerability" min="0.01" max="0.5" value="0.15" step="0.01">
+                        <small>Probability that contact results in a loss event</small>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="primaryLoss">Primary Loss Magnitude: $<span class="range-value" id="primary-value">50,000</span></label>
+                        <input type="range" id="primaryLoss" min="10000" max="200000" value="50000" step="5000">
+                        <small>Direct costs (response, recovery, replacement)</small>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="secondaryLoss">Secondary Loss Magnitude: $<span class="range-value" id="secondary-value">150,000</span></label>
+                        <input type="range" id="secondaryLoss" min="50000" max="500000" value="150000" step="10000">
+                        <small>Indirect costs (fines, reputational damage, legal)</small>
+                    </div>
+                </div>
+                
+                <div class="simulation-controls">
+                    <button id="runAnalysis">Run FAIR Analysis</button>
+                    <button id="runSensitivity">Run Sensitivity Analysis</button>
+                    <button id="resetValues">Reset to Default</button>
+                </div>
+                
+                <div class="results">
+                    <h3>FAIR Analysis Results</h3>
+                    <div class="result-item">
+                        <span>Loss Event Frequency (LEF):</span>
+                        <span id="lef-result">1.8 events/year</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Total Loss Magnitude (LM):</span>
+                        <span id="lm-result">$200,000</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Annualized Loss Expectancy (ALE):</span>
+                        <span id="ale-result">$360,000</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Risk Level (Based on ALE):</span>
+                        <span id="risk-level" class="risk-level medium-risk">MEDIUM</span>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="fairChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="sensitivityChart"></canvas>
+                </div>
+            </section>
+            
+            <!-- Section 4: Risk Evaluation -->
+            <section class="section">
+                <h2>4. Risk Evaluation (ISO 31000 Clause 6.4.4)</h2>
+                <p>Evaluating risks against Canonical's risk appetite and tolerance levels:</p>
+                
+                <div class="risk-matrix">
+                    <!-- Matrix headers -->
+                    <div class="matrix-cell matrix-label">Impact →<br>Likelihood ↓</div>
+                    <div class="matrix-cell matrix-label">Insignificant</div>
+                    <div class="matrix-cell matrix-label">Minor</div>
+                    <div class="matrix-cell matrix-label">Moderate</div>
+                    <div class="matrix-label matrix-cell">Major</div>
+                    <div class="matrix-label matrix-cell">Severe</div>
+                    
+                    <!-- Matrix rows -->
+                    <div class="matrix-cell matrix-label">Rare</div>
+                    <div class="matrix-cell cell-low">Low</div>
+                    <div class="matrix-cell cell-low">Low</div>
+                    <div class="matrix-cell cell-low-medium">Low-Medium</div>
+                    <div class="matrix-cell cell-medium">Medium</div>
+                    <div class="matrix-cell cell-medium-high">Medium-High</div>
+                    
+                    <div class="matrix-cell matrix-label">Unlikely</div>
+                    <div class="matrix-cell cell-low">Low</div>
+                    <div class="matrix-cell cell-low-medium">Low-Medium</div>
+                    <div class="matrix-cell cell-medium">Medium</div>
+                    <div class="matrix-cell cell-medium-high">Medium-High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    
+                    <div class="matrix-cell matrix-label">Possible</div>
+                    <div class="matrix-cell cell-low-medium">Low-Medium</div>
+                    <div class="matrix-cell cell-medium">Medium</div>
+                    <div class="matrix-cell cell-medium-high">Medium-High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    
+                    <div class="matrix-cell matrix-label">Likely</div>
+                    <div class="matrix-cell cell-medium">Medium</div>
+                    <div class="matrix-cell cell-medium-high">Medium-High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    
+                    <div class="matrix-cell matrix-label">Almost Certain</div>
+                    <div class="matrix-cell cell-medium-high">Medium-High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                    <div class="matrix-cell cell-high">High</div>
+                </div>
+                
+                <div class="control-group" style="margin-top: 20px;">
+                    <h3>Risk Prioritization</h3>
+                    <p>Based on FAIR analysis and ISO 31000 evaluation:</p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>RISK-01 (Unauthorized Access):</strong> HIGH priority - High potential financial impact</li>
+                        <li><strong>RISK-02 (Data Exfiltration):</strong> HIGH priority - Significant regulatory exposure</li>
+                        <li><strong>RISK-05 (Integration Risks):</strong> MEDIUM-HIGH priority - Critical data transfer vulnerability</li>
+                        <li><strong>RISK-03 (Insider Threat):</strong> MEDIUM priority - Requires monitoring and controls</li>
+                        <li><strong>RISK-04 (Data Loss):</strong> MEDIUM priority - Managed through backup strategies</li>
+                    </ol>
+                </div>
+            </section>
+            
+            <!-- Section 5: Risk Treatment -->
+            <section class="section">
+                <h2>5. Risk Treatment (ISO 31000 Clause 6.5)</h2>
+                <p>Recommended risk treatment options based on FAIR ROI analysis:</p>
+                
+                <div class="risk-treatment">
+                    <div class="treatment-card">
+                        <h4>Treatment 1: Enhanced Access Controls</h4>
+                        <p><strong>Action:</strong> Implement conditional access policies, multi-factor authentication, and just-in-time privileged access for SharePoint.</p>
+                        <p><strong>Expected Risk Reduction:</strong> 40% reduction in Threat Event Frequency</p>
+                        <p><strong>Cost:</strong> $15,000 initial + $5,000/year</p>
+                        <p><strong>ROI (Based on FAIR):</strong> <span id="roi-1" style="color: green; font-weight: bold;">3.2:1</span></p>
+                    </div>
+                    
+                    <div class="treatment-card">
+                        <h4>Treatment 2: Data Loss Prevention (DLP)</h4>
+                        <p><strong>Action:</strong> Deploy Microsoft Purview DLP policies to detect and prevent unauthorized sharing of PII data.</p>
+                        <p><strong>Expected Risk Reduction:</strong> 60% reduction in Vulnerability</p>
+                        <p><strong>Cost:</strong> $25,000 initial + $10,000/year</p>
+                        <p><strong>ROI (Based on FAIR):</strong> <span id="roi-2" style="color: green; font-weight: bold;">2.8:1</span></p>
+                    </div>
+                    
+                    <div class="treatment-card">
+                        <h4>Treatment 3: Encryption & Rights Management</h4>
+                        <p><strong>Action:</strong> Implement Azure Information Protection for encrypting PII data at rest and in transit with usage restrictions.</p>
+                        <p><strong>Expected Risk Reduction:</strong> 50% reduction in Secondary Loss Magnitude</p>
+                        <p><strong>Cost:</strong> $20,000 initial + $8,000/year</p>
+                        <p><strong>ROI (Based on FAIR):</strong> <span id="roi-3" style="color: orange; font-weight: bold;">1.9:1</span></p>
+                    </div>
+                </div>
+                
+                <div class="control-group" style="margin-top: 20px;">
+                    <h3>Residual Risk Assessment</h3>
+                    <p>After implementing recommended treatments, estimated residual risk:</p>
+                    <div class="result-item">
+                        <span>Residual Annualized Loss Expectancy:</span>
+                        <span id="residual-ale">$95,000</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Residual Risk Level:</span>
+                        <span class="risk-level low-risk">LOW</span>
+                    </div>
+                    <p style="margin-top: 10px;"><em>Residual risk falls within Canonical's risk tolerance level for PII data management.</em></p>
+                </div>
+            </section>
+            
+            <!-- Section 6: Monitoring & Review -->
+            <section class="section">
+                <h2>6. Monitoring & Review (ISO 31000 Clause 6.6)</h2>
+                <p>Key Risk Indicators (KRIs) for ongoing monitoring:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Number of unauthorized access attempts to SharePoint PII repositories</li>
+                    <li>Frequency of DLP policy violations for PII data</li>
+                    <li>Percentage of PII files with appropriate sensitivity labels</li>
+                    <li>Time to detect and respond to SharePoint security incidents</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Review Frequency:</strong> Quarterly risk reviews with monthly KRI reporting to Security Risk Management Team.</p>
+            </section>
+        </div>
+        
+        <footer>
+            <p>ISO 31000:2018 Risk Assessment | Canonical Security Risk Management Team</p>
+            <p>Assessment Date: <span id="currentDate"></span> | Next Review: <span id="nextReviewDate"></span></p>
+        </footer>
+    </div>
+
+    <script>
+        // Set current date and next review date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        let nextReview = new Date();
+        nextReview.setMonth(nextReview.getMonth() + 3);
+        document.getElementById('nextReviewDate').textContent = nextReview.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        
+        // Initialize FAIR variables
+        let threatEventFrequency = 12; // events per year
+        let vulnerability = 0.15; // probability
+        let primaryLoss = 50000; // dollars
+        let secondaryLoss = 150000; // dollars
+        
+        // Update range value displays
+        document.getElementById('tef-value').textContent = threatEventFrequency;
+        document.getElementById('vuln-value').textContent = vulnerability.toFixed(2);
+        document.getElementById('primary-value').textContent = primaryLoss.toLocaleString();
+        document.getElementById('secondary-value').textContent = secondaryLoss.toLocaleString();
+        
+        // Initialize Charts
+        let fairChart, sensitivityChart;
+        
+        // Function to update FAIR analysis
+        function updateFAIRAnalysis() {
+            // Calculate FAIR components
+            const lossEventFrequency = threatEventFrequency * vulnerability;
+            const totalLossMagnitude = primaryLoss + secondaryLoss;
+            const annualizedLossExpectancy = lossEventFrequency * totalLossMagnitude;
+            
+            // Update results display
+            document.getElementById('lef-result').textContent = lossEventFrequency.toFixed(2) + " events/year";
+            document.getElementById('lm-result').textContent = "$" + totalLossMagnitude.toLocaleString();
+            document.getElementById('ale-result').textContent = "$" + annualizedLossExpectancy.toLocaleString(undefined, {maximumFractionDigits: 0});
+            
+            // Determine risk level
+            let riskLevelElement = document.getElementById('risk-level');
+            if (annualizedLossExpectancy > 500000) {
+                riskLevelElement.textContent = "HIGH";
+                riskLevelElement.className = "risk-level high-risk";
+            } else if (annualizedLossExpectancy > 100000) {
+                riskLevelElement.textContent = "MEDIUM";
+                riskLevelElement.className = "risk-level medium-risk";
+            } else {
+                riskLevelElement.textContent = "LOW";
+                riskLevelElement.className = "risk-level low-risk";
+            }
+            
+            // Update ROI calculations
+            updateROICalculations(annualizedLossExpectancy);
+            
+            // Update FAIR chart
+            updateFAIRChart(lossEventFrequency, totalLossMagnitude, annualizedLossExpectancy);
+        }
+        
+        // Function to update ROI calculations
+        function updateROICalculations(ale) {
+            // Treatment 1: Enhanced Access Controls (reduces TEF by 40%)
+            const treatment1Cost = 15000 + (5000 * 3); // 3-year TCO
+            const treatment1Benefit = ale * 0.4 * 3; // 3-year benefit assuming 40% reduction
+            const roi1 = treatment1Benefit / treatment1Cost;
+            document.getElementById('roi-1').textContent = roi1.toFixed(1) + ":1";
+            document.getElementById('roi-1').style.color = roi1 >= 1 ? "green" : "red";
+            
+            // Treatment 2: DLP (reduces Vulnerability by 60%)
+            const treatment2Cost = 25000 + (10000 * 3); // 3-year TCO
+            const treatment2Benefit = ale * 0.6 * 3; // 3-year benefit assuming 60% reduction
+            const roi2 = treatment2Benefit / treatment2Cost;
+            document.getElementById('roi-2').textContent = roi2.toFixed(1) + ":1";
+            document.getElementById('roi-2').style.color = roi2 >= 1 ? "green" : "orange";
+            
+            // Treatment 3: Encryption (reduces Secondary Loss by 50%)
+            const treatment3Cost = 20000 + (8000 * 3); // 3-year TCO
+            const secondaryLossRatio = secondaryLoss / (primaryLoss + secondaryLoss);
+            const treatment3Benefit = ale * secondaryLossRatio * 0.5 * 3; // 3-year benefit
+            const roi3 = treatment3Benefit / treatment3Cost;
+            document.getElementById('roi-3').textContent = roi3.toFixed(1) + ":1";
+            document.getElementById('roi-3').style.color = roi3 >= 1 ? "green" : "orange";
+            
+            // Calculate residual ALE after treatments
+            const residualTEF = threatEventFrequency * 0.6; // 40% reduction from Treatment 1
+            const residualVuln = vulnerability * 0.4; // 60% reduction from Treatment 2
+            const residualSecondaryLoss = secondaryLoss * 0.5; // 50% reduction from Treatment 3
+            const residualLEF = residualTEF * residualVuln;
+            const residualLM = primaryLoss + residualSecondaryLoss;
+            const residualALE = residualLEF * residualLM;
+            
+            document.getElementById('residual-ale').textContent = "$" + residualALE.toLocaleString(undefined, {maximumFractionDigits: 0});
+        }
+        
+        // Function to update FAIR chart
+        function updateFAIRChart(lef, lm, ale) {
+            const ctx = document.getElementById('fairChart').getContext('2d');
+            
+            if (fairChart) {
+                fairChart.destroy();
+            }
+            
+            fairChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Threat Event Frequency', 'Vulnerability', 'Loss Event Frequency', 'Loss Magnitude', 'Annualized Loss Expectancy'],
+                    datasets: [{
+                        label: 'FAIR Model Components',
+                        data: [threatEventFrequency, vulnerability, lef, lm/10000, ale/10000],
+                        backgroundColor: [
+                            'rgba(119, 41, 83, 0.7)',
+                            'rgba(233, 84, 32, 0.7)',
+                            'rgba(119, 41, 83, 0.9)',
+                            'rgba(233, 84, 32, 0.9)',
+                            'rgba(76, 175, 80, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(119, 41, 83)',
+                            'rgb(233, 84, 32)',
+                            'rgb(119, 41, 83)',
+                            'rgb(233, 84, 32)',
+                            'rgb(56, 142, 60)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Value (Loss in $10K)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'FAIR Model Quantitative Analysis',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.dataIndex === 0) {
+                                        label += context.parsed.y.toFixed(1) + ' events/year';
+                                    } else if (context.dataIndex === 1) {
+                                        label += (context.parsed.y * 100).toFixed(1) + '%';
+                                    } else if (context.dataIndex === 2) {
+                                        label += context.parsed.y.toFixed(2) + ' events/year';
+                                    } else if (context.dataIndex === 3) {
+                                        label += '$' + (context.parsed.y * 10000).toLocaleString();
+                                    } else if (context.dataIndex === 4) {
+                                        label += '$' + (context.parsed.y * 10000).toLocaleString();
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Function to run sensitivity analysis
+        function runSensitivityAnalysis() {
+            // Monte Carlo simulation for sensitivity analysis
+            const iterations = 1000;
+            let tefValues = [];
+            let vulnValues = [];
+            let primaryValues = [];
+            let secondaryValues = [];
+            let aleValues = [];
+            
+            // Generate random values within +/- 30% of current values
+            for (let i = 0; i < iterations; i++) {
+                const randomTEF = threatEventFrequency * (0.7 + Math.random() * 0.6);
+                const randomVuln = vulnerability * (0.7 + Math.random() * 0.6);
+                const randomPrimary = primaryLoss * (0.7 + Math.random() * 0.6);
+                const randomSecondary = secondaryLoss * (0.7 + Math.random() * 0.6);
+                
+                tefValues.push(randomTEF);
+                vulnValues.push(randomVuln);
+                primaryValues.push(randomPrimary);
+                secondaryValues.push(randomSecondary);
+                
+                const lef = randomTEF * randomVuln;
+                const lm = randomPrimary + randomSecondary;
+                aleValues.push(lef * lm);
+            }
+            
+            // Calculate sensitivity (correlation) of each factor to ALE
+            const sensitivityTEF = calculateCorrelation(tefValues, aleValues);
+            const sensitivityVuln = calculateCorrelation(vulnValues, aleValues);
+            const sensitivityPrimary = calculateCorrelation(primaryValues, aleValues);
+            const sensitivitySecondary = calculateCorrelation(secondaryValues, aleValues);
+            
+            // Update sensitivity chart
+            updateSensitivityChart(sensitivityTEF, sensitivityVuln, sensitivityPrimary, sensitivitySecondary);
+        }
+        
+        // Function to calculate correlation coefficient
+        function calculateCorrelation(x, y) {
+            const n = x.length;
+            let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+            
+            for (let i = 0; i < n; i++) {
+                sumX += x[i];
+                sumY += y[i];
+                sumXY += x[i] * y[i];
+                sumX2 += x[i] * x[i];
+                sumY2 += y[i] * y[i];
+            }
+            
+            const numerator = n * sumXY - sumX * sumY;
+            const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+            
+            return denominator !== 0 ? numerator / denominator : 0;
+        }
+        
+        // Function to update sensitivity chart
+        function updateSensitivityChart(tefSens, vulnSens, primarySens, secondarySens) {
+            const ctx = document.getElementById('sensitivityChart').getContext('2d');
+            
+            if (sensitivityChart) {
+                sensitivityChart.destroy();
+            }
+            
+            sensitivityChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Threat Event Frequency', 'Vulnerability', 'Primary Loss', 'Secondary Loss'],
+                    datasets: [{
+                        label: 'Sensitivity to ALE (Correlation)',
+                        data: [tefSens, vulnSens, primarySens, secondarySens],
+                        backgroundColor: [
+                            'rgba(119, 41, 83, 0.7)',
+                            'rgba(233, 84, 32, 0.7)',
+                            'rgba(76, 175, 80, 0.7)',
+                            'rgba(33, 150, 243, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(119, 41, 83)',
+                            'rgb(233, 84, 32)',
+                            'rgb(56, 142, 60)',
+                            'rgb(30, 136, 229)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1,
+                            title: {
+                                display: true,
+                                text: 'Correlation Coefficient'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Sensitivity Analysis: Impact of FAIR Factors on Annual Loss',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Correlation: ${context.parsed.y.toFixed(3)}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Event listeners for range inputs
+        document.getElementById('threatEventFrequency').addEventListener('input', function() {
+            threatEventFrequency = parseInt(this.value);
+            document.getElementById('tef-value').textContent = threatEventFrequency;
+        });
+        
+        document.getElementById('vulnerability').addEventListener('input', function() {
+            vulnerability = parseFloat(this.value);
+            document.getElementById('vuln-value').textContent = vulnerability.toFixed(2);
+        });
+        
+        document.getElementById('primaryLoss').addEventListener('input', function() {
+            primaryLoss = parseInt(this.value);
+            document.getElementById('primary-value').textContent = primaryLoss.toLocaleString();
+        });
+        
+        document.getElementById('secondaryLoss').addEventListener('input', function() {
+            secondaryLoss = parseInt(this.value);
+            document.getElementById('secondary-value').textContent = secondaryLoss.toLocaleString();
+        });
+        
+        // Event listeners for buttons
+        document.getElementById('runAnalysis').addEventListener('click', function() {
+            updateFAIRAnalysis();
+        });
+        
+        document.getElementById('runSensitivity').addEventListener('click', function() {
+            runSensitivityAnalysis();
+        });
+        
+        document.getElementById('resetValues').addEventListener('click', function() {
+            threatEventFrequency = 12;
+            vulnerability = 0.15;
+            primaryLoss = 50000;
+            secondaryLoss = 150000;
+            
+            document.getElementById('threatEventFrequency').value = threatEventFrequency;
+            document.getElementById('vulnerability').value = vulnerability;
+            document.getElementById('primaryLoss').value = primaryLoss;
+            document.getElementById('secondaryLoss').value = secondaryLoss;
+            
+            document.getElementById('tef-value').textContent = threatEventFrequency;
+            document.getElementById('vuln-value').textContent = vulnerability.toFixed(2);
+            document.getElementById('primary-value').textContent = primaryLoss.toLocaleString();
+            document.getElementById('secondary-value').textContent = secondaryLoss.toLocaleString();
+            
+            updateFAIRAnalysis();
+        });
+        
+        // Initialize the analysis on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateFAIRAnalysis();
+        });
+    </script>
+</body>
+</html>
