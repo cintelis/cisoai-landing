@@ -78,4 +78,5 @@ The landing page has two form handlers with placeholder API endpoints:
    This routes requests automatically via Cloudflare Pages Functions.
 
 ## Login Button
-All login/signup buttons point to: **https://app.cisoai.au**
+All login buttons point to: **/login.html**
+All signup buttons point to: **/signup.html**
