@@ -3,15 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CISO AI — Cyber Intelligence & Strategic Insights</title>
-    <meta name="description" content="AI-powered cybersecurity governance platform for CISOs. Risk dashboards, compliance automation, and board-ready reporting powered by artificial intelligence.">
-    <meta name="keywords" content="CISO, AI, cybersecurity, risk management, compliance, dashboard, ISO 27001, SOC 2, NIST, governance">
-    <meta property="og:title" content="CISO AI — Cyber Intelligence & Strategic Insights">
-    <meta property="og:description" content="AI-powered cybersecurity governance platform. Transform complex security data into board-ready strategic insights.">
+    <title>CISO AI — AI-Powered Cybersecurity Governance Platform for CISOs</title>
+    <meta name="description" content="AI-powered cybersecurity governance platform for CISOs. Risk dashboards, compliance automation, and board-ready reporting across ISO 27001, SOC 2, NIST CSF, APRA CPS 234, GDPR, and EU AI Act.">
+    <meta name="keywords" content="CISO, AI, cybersecurity governance, risk management, compliance automation, CISO dashboard, ISO 27001, SOC 2, NIST CSF, APRA CPS 234, GDPR, EU AI Act, ISO 42001, GRC, board reporting, risk quantification, FAIR, vCISO, cyber risk, security posture">
+    <meta name="author" content="CISO AI">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://cisoai.au/">
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:site_name" content="CISO AI">
+    <meta property="og:title" content="CISO AI — AI-Powered Cybersecurity Governance Platform">
+    <meta property="og:description" content="Transform complex security data into board-ready strategic insights. Risk dashboards, compliance automation, and executive reporting for modern CISOs.">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cisoai.au/">
+    <meta property="og:image" content="https://cisoai.au/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="CISO AI — Cyber Intelligence and Strategic Insights. AI-powered cybersecurity governance platform with shield logo, showing supported frameworks: ISO 27001, SOC 2, NIST CSF, APRA CPS 234, GDPR, EU AI Act.">
+    <meta property="og:locale" content="en_AU">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@cisoai_au">
+    <meta name="twitter:creator" content="@cisoai_au">
+    <meta name="twitter:title" content="CISO AI — AI-Powered Cybersecurity Governance">
+    <meta name="twitter:description" content="Risk dashboards, compliance automation, and board-ready reporting for modern CISOs. Powered by AI.">
+    <meta name="twitter:image" content="https://cisoai.au/og-image.png">
+    <meta name="twitter:image:alt" content="CISO AI — Cyber Intelligence and Strategic Insights platform">
+
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#06090f">
+    <meta name="application-name" content="CISO AI">
+    <meta name="apple-mobile-web-app-title" content="CISO AI">
     <link rel="icon" type="image/svg+xml" href="./favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "CISO AI",
+        "alternateName": "CISO AI — Cyber Intelligence & Strategic Insights",
+        "url": "https://cisoai.au",
+        "description": "AI-powered cybersecurity governance platform for CISOs. Risk dashboards, compliance automation, and board-ready reporting across major security frameworks.",
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "Web",
+        "image": "https://cisoai.au/og-image.png",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "AUD",
+            "description": "Free during early access"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "CISO AI",
+            "url": "https://cisoai.au",
+            "logo": "https://cisoai.au/og-image.png",
+            "sameAs": [
+                "https://www.linkedin.com/company/cisoai",
+                "https://x.com/cisoai_au",
+                "https://github.com/cisoai"
+            ],
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Sydney",
+                "addressCountry": "AU"
+            }
+        },
+        "keywords": ["CISO", "cybersecurity governance", "AI", "risk management", "compliance automation", "ISO 27001", "SOC 2", "NIST CSF", "APRA CPS 234", "GDPR", "EU AI Act", "board reporting"]
+    }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,6 +215,18 @@
             gap: 12px;
             text-decoration: none;
         }
+        .nav-logo-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--gradient-hero);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #fff;
+            box-shadow: 0 0 24px rgba(56, 130, 246, 0.2);
+        }
         .nav-logo-text {
             font-weight: 700;
             font-size: 1.35rem;
@@ -162,6 +238,9 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        @media (max-width: 720px) {
+            .nav-logo-icon { display: none; }
         }
         .nav-links {
             display: flex;
@@ -1177,6 +1256,7 @@
             .features-grid { grid-template-columns: 1fr; }
             .steps-grid { grid-template-columns: 1fr; }
             .nav-links { display: none; }
+            .nav-login { display: none; }
             .mobile-toggle { display: block; }
             .hero-stats { gap: 24px; flex-wrap: wrap; }
             .hero h1 { font-size: 2.4rem; }
@@ -1230,7 +1310,8 @@
 <nav id="mainNav">
     <div class="container">
         <div class="nav-inner">
-            <a href="#" class="nav-logo">
+            <a href="./index.html" class="nav-logo">
+                <div class="nav-logo-icon"><i class="fas fa-shield-halved"></i></div>
                 <div class="nav-logo-text">CISO <span>AI</span></div>
             </a>
             <ul class="nav-links">
@@ -1241,7 +1322,7 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="/login.html" class="btn btn-ghost">Log In</a>
+                <a href="/login.html" class="btn btn-ghost nav-login">Log In</a>
                 <a href="/signup.html" class="btn btn-primary">Get Started <i class="fas fa-arrow-right" style="font-size:0.75rem"></i></a>
             </div>
             <button class="mobile-toggle" onclick="toggleMobileMenu()" aria-label="Open menu">
@@ -1712,6 +1793,7 @@
         <div class="footer-grid">
             <div class="footer-brand">
                 <a href="#" class="nav-logo" style="margin-bottom:4px">
+                    <div class="nav-logo-icon"><i class="fas fa-shield-halved"></i></div>
                     <div class="nav-logo-text">CISO <span>AI</span></div>
                 </a>
                 <p>Cyber Intelligence • Strategic Insights. AI-powered cybersecurity governance for modern security leaders.</p>
@@ -1749,7 +1831,7 @@
             <div class="footer-socials">
                 <a href="https://www.linkedin.com/company/cisoai-au" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
                 <a href="https://x.com/ciso-ai" aria-label="X / Twitter"><i class="fab fa-x-twitter"></i></a>
-                <a href="https://github.com/cisoai" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/CISO-AI" aria-label="GitHub"><i class="fab fa-github"></i></a>
             </div>
         </div>
     </div>

@@ -152,6 +152,18 @@
             gap: 12px;
             text-decoration: none;
         }
+        .nav-logo-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--gradient-hero);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #fff;
+            box-shadow: 0 0 24px rgba(56, 130, 246, 0.2);
+        }
         .nav-logo-text {
             font-weight: 700;
             font-size: 1.35rem;
@@ -163,6 +175,9 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+        @media (max-width: 720px) {
+            .nav-logo-icon { display: none; }
         }
         .nav-links {
             display: flex;
@@ -1178,6 +1193,7 @@
             .features-grid { grid-template-columns: 1fr; }
             .steps-grid { grid-template-columns: 1fr; }
             .nav-links { display: none; }
+            .nav-login { display: none; }
             .mobile-toggle { display: block; }
             .hero-stats { gap: 24px; flex-wrap: wrap; }
             .hero h1 { font-size: 2.4rem; }
@@ -1283,6 +1299,7 @@
     <div class="container">
         <div class="nav-inner">
             <a href="/" class="nav-logo">
+                <div class="nav-logo-icon"><i class="fas fa-shield-halved"></i></div>
                 <div class="nav-logo-text">CISO <span>AI</span></div>
             </a>
             <ul class="nav-links">
@@ -1293,7 +1310,7 @@
                 <li><a href="/#contact">Contact</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="/login.html" class="btn btn-ghost">Log In</a>
+                <a href="/login.html" class="btn btn-ghost nav-login">Log In</a>
                 <a href="/signup.html" class="btn btn-primary">Get Started <i class="fas fa-arrow-right" style="font-size:0.75rem"></i></a>
             </div>
             <button class="mobile-toggle" onclick="toggleMobileMenu()" aria-label="Open menu">
@@ -1388,6 +1405,7 @@
         <div class="footer-grid">
             <div class="footer-brand">
                 <a href="#" class="nav-logo" style="margin-bottom:4px">
+                    <div class="nav-logo-icon"><i class="fas fa-shield-halved"></i></div>
                     <div class="nav-logo-text">CISO <span>AI</span></div>
                 </a>
                 <p>Cyber Intelligence • Strategic Insights. AI-powered cybersecurity governance for modern security leaders.</p>
