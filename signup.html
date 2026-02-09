@@ -1079,6 +1079,21 @@ function handleSignup(e) {
     });
 
     Promise.all([adminPromise, userPromise]).then(function() {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: 'ao_event',
+            ao: {
+                version: '1.0',
+                event_name: 'lead_signup',
+                event_id: (window.crypto && crypto.randomUUID ? crypto.randomUUID() : (String(Date.now()) + '-' + Math.random().toString(16).slice(2))),
+                event_time: Math.floor(Date.now() / 1000),
+                page: {
+                    url: location.href,
+                    path: location.pathname,
+                    referrer: document.referrer || ''
+                }
+            }
+        });
         showToast('Welcome to CISO AI! Check your inbox for confirmation.');
         form.reset();
     }).catch(function(err) {
