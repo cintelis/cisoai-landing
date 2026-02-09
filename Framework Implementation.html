@@ -882,7 +882,7 @@
                         phaseCompleted++;
                     }
                     
-                    report += `[${isCompleted ? 'âœ“' : ' '}] ${item.text} (${item.priority} priority)\n`;
+                    report += `[${isCompleted ? '✓' : ' '}] ${item.text} (${item.priority} priority)\n`;
                 });
                 
                 report += `Phase completion: ${phaseCompleted}/${phase.items.length} items\n\n`;

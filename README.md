@@ -30,6 +30,10 @@ npm install -g wrangler
 wrangler pages deploy cisoai-landing/ --project-name=cisoai-landing
 ```
 
+## Encoding Notes
+- Keep files saved as UTF-8. Avoid re-saving as Windows-1252/ANSI, which corrupts characters like em dashes and box-drawing glyphs.
+- If using PowerShell to rewrite files, specify UTF-8 explicitly (for example: `Out-File -Encoding utf8`).
+
 ## Cloudflare Worker SMTP Integration
 
 The landing page has two form handlers with placeholder API endpoints:
