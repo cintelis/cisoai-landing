@@ -34,52 +34,34 @@ wrangler pages deploy cisoai-landing/ --project-name=cisoai-landing
 - Keep files saved as UTF-8. Avoid re-saving as Windows-1252/ANSI, which corrupts characters like em dashes and box-drawing glyphs.
 - If using PowerShell to rewrite files, specify UTF-8 explicitly (for example: `Out-File -Encoding utf8`).
 
-## Cloudflare Worker SMTP Integration
+## Email Integration (Cloudflare Access Protected Worker)
 
-The landing page has two form handlers with placeholder API endpoints:
+The landing page sends emails via a **same-origin proxy** at `/api/send` (Cloudflare Pages Function). The proxy forwards to your Cloudflare email worker with Access service-token headers, so the worker can remain protected by Cloudflare Access.
 
-- **Contact form** → `POST /api/contact`
-- **Newsletter** → `POST /api/subscribe`
+Default upstream (override with env var if needed):
 
-### Payload formats:
+`https://365soft-email-worker.nick-598.workers.dev/api/send`
 
-**Contact form sends:**
+### Payload format
 ```json
 {
-  "firstName": "Jane",
-  "lastName": "Smith",
-  "email": "jane@company.com",
-  "company": "Company name",
-  "message": "...",
-  "type": "contact"
+  "to": "admin@cisoai.au",
+  "subject": "New Contact Enquiry",
+  "message": "<p>Hello</p>",
+  "contentType": "HTML",
+  "fromEmail": "hello@cisoai.au"
 }
 ```
 
-**Newsletter sends:**
-```json
-{
-  "email": "user@example.com",
-  "type": "newsletter"
-}
-```
+### Cloudflare Access (Pages Function proxy)
 
-### To connect your Cloudflare Worker:
+Configure these **Pages** environment variables (production + preview if needed):
 
-1. In `index.html`, find these two lines and update with your Worker URL:
-   ```javascript
-   const CONTACT_API_ENDPOINT = '/api/contact';
-   const NEWSLETTER_API_ENDPOINT = '/api/subscribe';
-   ```
+- `CF_ACCESS_CLIENT_ID` (service token client id)
+- `CF_ACCESS_CLIENT_SECRET` (service token client secret)
+- `EMAIL_API_URL` (optional override; defaults to the 365soft worker URL)
 
-2. Uncomment the `fetch()` calls in `handleContactSubmit()` and `handleNewsletterSubmit()` functions
-
-3. If your Worker is on a different domain, update the URLs to the full Worker URL (e.g., `https://smtp-worker.your-account.workers.dev/contact`)
-
-4. If using Pages Functions instead, create:
-   - `functions/api/contact.js`
-   - `functions/api/subscribe.js`
-   
-   This routes requests automatically via Cloudflare Pages Functions.
+The proxy function lives at `functions/api/send.js`.
 
 ## Login Button
 All login buttons point to: **/login.html**
