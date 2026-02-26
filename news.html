@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Intelligence Feed | CISO AI</title>
+  <meta name="description" content="Real-time cybersecurity news and threat intelligence for Australian SMBs, powered by CISO AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #080b0f;
+      --bg2:       #0d1117;
+      --bg3:       #111820;
+      --surface:   #141c26;
+      --border:    #1e2d3d;
+      --border2:   #243447;
+      --accent:    #00c8ff;
+      --accent2:   #0088bb;
+      --accent3:   #00ff88;
+      --warn:      #ff6b35;
+      --muted:     #4a6070;
+      --text:      #c8d8e8;
+      --text2:     #8a9ab0;
+      --text3:     #5a7088;
+      --mono:      'JetBrains Mono', monospace;
+      --display:   'Barlow Condensed', sans-serif;
+      --body:      'Barlow', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,11,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .logo-text span { color: var(--accent); }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text3);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent3);
+      box-shadow: 0 0 6px var(--accent3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .header-back {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text3);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .header-back:hover { color: var(--accent); }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      padding: 3rem 2rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-label::before {
+      content: '//';
+      color: var(--muted);
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero-desc {
+      font-size: 0.95rem;
+      color: var(--text2);
+      font-weight: 300;
+      max-width: 480px;
+      line-height: 1.6;
+    }
+
+    /* ── Controls ── */
+    .controls {
+      position: relative;
+      z-index: 1;
+      padding: 1rem 2rem 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-btn {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,200,255,0.08);
+    }
+
+    .controls-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .refresh-btn {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text3);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .refresh-btn:hover {
+      border-color: var(--accent3);
+      color: var(--accent3);
+    }
+
+    .refresh-icon { font-size: 0.9rem; }
+    .refresh-btn.spinning .refresh-icon { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .article-count {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text3);
+      padding: 0.4rem 0.75rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    /* ── Main grid ── */
+    .main {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    /* ── Featured + sidebar layout ── */
+    .news-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .news-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+
+    /* ── Featured article ── */
+    .featured-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .featured-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+    }
+
+    .featured-card::after {
+      content: 'FEATURED';
+      position: absolute;
+      top: 1.25rem; right: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      opacity: 0.6;
+    }
+
+    .featured-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card-category {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-category.gov { color: var(--warn); }
+    .card-category.research { color: var(--accent3); }
+
+    .featured-card h2 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: #e8f0f8;
+      margin-bottom: 1rem;
+    }
+
+    .card-summary {
+      font-size: 0.88rem;
+      color: var(--text2);
+      line-height: 1.65;
+      margin-bottom: 1.25rem;
+    }
+
+    .key-takeaway {
+      background: rgba(0,200,255,0.05);
+      border-left: 2px solid var(--accent);
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .key-takeaway strong {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .card-source {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text3);
+      letter-spacing: 0.05em;
+    }
+
+    .card-date {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text3);
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--border2);
+      color: var(--text3);
+      letter-spacing: 0.05em;
+    }
+
+    .read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 1rem;
+      transition: gap 0.2s;
+    }
+
+    .read-more:hover { gap: 0.7rem; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .sidebar-header {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text3);
+      padding: 0.75rem 1rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      margin-bottom: 1px;
+    }
+
+    .sidebar-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .sidebar-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+
+    .sidebar-item:hover {
+      border-color: var(--border2);
+      background: var(--bg3);
+    }
+
+    .sidebar-item:hover::before { background: var(--accent); }
+
+    .sidebar-item h3 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 0.9rem;
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-meta {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .sidebar-source {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-date {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--text3);
+    }
+
+    /* ── Article grid ── */
+    .grid-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text3);
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1px;
+    }
+
+    .article-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: transparent;
+      transition: background 0.2s;
+    }
+
+    .article-card:hover {
+      border-color: var(--border2);
+      background: var(--bg3);
+      z-index: 1;
+    }
+
+    .article-card:hover::before {
+      background: var(--accent);
+    }
+
+    .article-card h3 {
+      font-family: var(--display);
+      font-weight: 600;
+      font-size: 1rem;
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      flex: 1;
+    }
+
+    .article-summary {
+      font-size: 0.8rem;
+      color: var(--text3);
+      line-height: 1.55;
+      margin-bottom: 0.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      max-width: 700px;
+      width: 100%;
+      padding: 2.5rem;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.25s;
+    }
+
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem; right: 1.25rem;
+      background: none;
+      border: 1px solid var(--border2);
+      color: var(--text3);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.6rem;
+      letter-spacing: 0.1em;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover { border-color: var(--warn); color: var(--warn); }
+
+    .modal h2 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.6rem;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      padding-right: 3rem;
+    }
+
+    .modal-body {
+      font-size: 0.9rem;
+      color: var(--text2);
+      line-height: 1.75;
+      white-space: pre-line;
+      margin: 1.25rem 0;
+    }
+
+    .modal-footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .modal-source-link {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: opacity 0.2s;
+    }
+
+    .modal-source-link:hover { opacity: 0.7; }
+
+    /* ── Loading state ── */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem;
+      gap: 1.5rem;
+    }
+
+    .loading-bar {
+      width: 200px;
+      height: 2px;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loading-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -50%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: loading 1.2s linear infinite;
+    }
+
+    @keyframes loading {
+      to { left: 150%; }
+    }
+
+    .loading-text {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text3);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── Empty / Error state ── */
+    .empty-state {
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .empty-state p {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text3);
+      letter-spacing: 0.05em;
+    }
+
+    .empty-state .trigger-btn {
+      margin-top: 1.5rem;
+      display: inline-block;
+      padding: 0.6rem 1.5rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: rgba(0,200,255,0.08);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .empty-state .trigger-btn:hover {
+      background: rgba(0,200,255,0.15);
+    }
+
+    /* ── Scanline overlay ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,200,255,0.008) 2px,
+        rgba(0,200,255,0.008) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* ── Staggered reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <div class="logo-mark">CA</div>
+        <span class="logo-text">CISO<span> AI</span></span>
+      </a>
+      <div class="header-status">
+        <div class="status-dot"></div>
+        <span id="lastUpdated">Loading...</span>
+      </div>
+      <a href="/" class="header-back">← Back to site</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero reveal">
+    <div class="hero-label">Cyber Intelligence Feed</div>
+    <h1>
+      Threat<br/>
+      <em>Intelligence</em>
+    </h1>
+    <p class="hero-desc">
+      AI-curated cybersecurity news from leading sources, rewritten for Australian SMB decision-makers. Updated every 6 hours.
+    </p>
+  </section>
+
+  <!-- Controls -->
+  <div class="controls reveal">
+    <button class="filter-btn active" data-filter="all">All Sources</button>
+    <button class="filter-btn" data-filter="Threat Intelligence">Threats</button>
+    <button class="filter-btn" data-filter="Security News">Security</button>
+    <button class="filter-btn" data-filter="Government Advisory">Advisories</button>
+    <button class="filter-btn" data-filter="Cybersecurity Research">Research</button>
+    <button class="filter-btn" data-filter="Industry News">Industry</button>
+    <div class="controls-right">
+      <span class="article-count" id="articleCount">— articles</span>
+      <button class="refresh-btn" id="refreshBtn">
+        <span class="refresh-icon">↻</span> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <main class="main">
+    <div id="loadingState" class="loading">
+      <div class="loading-bar"></div>
+      <div class="loading-text">Fetching intelligence...</div>
+    </div>
+
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <p>No articles found. The pipeline may not have run yet.</p>
+      <button class="trigger-btn" onclick="loadNews()">Try Again</button>
+    </div>
+
+    <div id="newsContent" style="display:none;">
+      <!-- Featured + sidebar -->
+      <div class="news-layout" id="topLayout"></div>
+      <!-- Grid label -->
+      <div class="grid-label reveal">Latest Intelligence</div>
+      <!-- Articles grid -->
+      <div class="articles-grid" id="articlesGrid"></div>
+    </div>
+  </main>
+
+  <!-- Article Modal -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal" id="modalContent">
+      <button class="modal-close" onclick="closeModal()">✕ CLOSE</button>
+      <div class="card-category" id="modalCategory"></div>
+      <h2 id="modalTitle"></h2>
+      <div class="card-source" id="modalSource"></div>
+      <div class="key-takeaway" id="modalTakeaway" style="display:none;">
+        <strong>Key Takeaway</strong>
+        <span id="modalTakeawayText"></span>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="card-tags" id="modalTags"></div>
+      <div class="modal-footer">
+        <a href="#" id="modalSourceLink" class="modal-source-link" target="_blank" rel="noopener">
+          Read original source ↗
+        </a>
+        <span class="card-date" id="modalDate"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const NEWS_API = 'https://news-worker.nick-598.workers.dev/api/news';
+
+    let allArticles = [];
+    let activeFilter = 'all';
+
+    // ─── Fetch news ───────────────────────────────────────────────────────────
+
+    async function loadNews() {
+      document.getElementById('loadingState').style.display = 'flex';
+      document.getElementById('newsContent').style.display = 'none';
+      document.getElementById('emptyState').style.display = 'none';
+
+      try {
+        const resp = await fetch(`${NEWS_API}?limit=50`);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        allArticles = data.articles || [];
+
+        if (allArticles.length === 0) {
+          document.getElementById('loadingState').style.display = 'none';
+          document.getElementById('emptyState').style.display = 'block';
+          return;
+        }
+
+        // Update last updated
+        if (allArticles[0]?.createdAt) {
+          document.getElementById('lastUpdated').textContent =
+            'Updated ' + formatRelativeTime(allArticles[0].createdAt);
+        }
+
+        renderNews(allArticles);
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('newsContent').style.display = 'block';
+        revealElements();
+
+      } catch (err) {
+        console.error('Failed to load news:', err);
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+      }
+    }
+
+    // ─── Render ───────────────────────────────────────────────────────────────
+
+    function renderNews(articles) {
+      const filtered = activeFilter === 'all'
+        ? articles
+        : articles.filter(a => a.category === activeFilter);
+
+      document.getElementById('articleCount').textContent = `${filtered.length} articles`;
+
+      // Top layout: featured + sidebar
+      const topLayout = document.getElementById('topLayout');
+      const featured = filtered[0];
+      const sidebarItems = filtered.slice(1, 6);
+      const gridItems = filtered.slice(6);
+
+      topLayout.innerHTML = '';
+
+      if (featured) {
+        topLayout.innerHTML += renderFeaturedCard(featured);
+      }
+
+      if (sidebarItems.length > 0) {
+        const sidebar = document.createElement('div');
+        sidebar.className = 'sidebar';
+        sidebar.innerHTML = '<div class="sidebar-header">// Latest Intel</div>' +
+          sidebarItems.map(a => renderSidebarItem(a)).join('');
+        topLayout.appendChild(sidebar);
+      }
+
+      // Grid
+      const grid = document.getElementById('articlesGrid');
+      grid.innerHTML = gridItems.map(a => renderArticleCard(a)).join('');
+    }
+
+    function categoryClass(cat) {
+      if (!cat) return '';
+      if (cat.includes('Gov') || cat.includes('Advisory')) return 'gov';
+      if (cat.includes('Research')) return 'research';
+      return '';
+    }
+
+    function renderFeaturedCard(a) {
+      return `
+        <div class="featured-card reveal" onclick="openModal('${a.id}')">
+          <div class="card-category ${categoryClass(a.category)}">${a.category || 'Security'}</div>
+          <h2>${escHtml(a.headline)}</h2>
+          <p class="card-summary">${escHtml(a.summary)}</p>
+          ${a.keyTakeaway ? `
+          <div class="key-takeaway">
+            <strong>Key Takeaway</strong>
+            ${escHtml(a.keyTakeaway)}
+          </div>` : ''}
+          <div class="card-footer">
+            <span class="card-source">${escHtml(a.source)}</span>
+            <span class="card-date">${formatDate(a.publishedAt)}</span>
+            <div class="card-tags">${(a.tags||[]).slice(0,3).map(t=>`<span class="tag">${escHtml(t)}</span>`).join('')}</div>
+          </div>
+          <a class="read-more" onclick="event.stopPropagation();" href="${escHtml(a.originalUrl)}" target="_blank" rel="noopener">
+            Read full article →
+          </a>
+        </div>`;
+    }
+
+    function renderSidebarItem(a) {
+      return `
+        <div class="sidebar-item" onclick="openModal('${a.id}')">
+          <h3>${escHtml(a.headline)}</h3>
+          <div class="sidebar-meta">
+            <span class="sidebar-source">${escHtml(a.source)}</span>
+            <span class="sidebar-date">${formatDate(a.publishedAt)}</span>
+          </div>
+        </div>`;
+    }
+
+    function renderArticleCard(a) {
+      return `
+        <div class="article-card reveal" onclick="openModal('${a.id}')">
+          <div class="card-category ${categoryClass(a.category)}">${a.category || 'Security'}</div>
+          <h3>${escHtml(a.headline)}</h3>
+          <p class="article-summary">${escHtml(a.summary)}</p>
+          <div class="card-footer">
+            <span class="card-source">${escHtml(a.source)}</span>
+            <span class="card-date">${formatDate(a.publishedAt)}</span>
+          </div>
+        </div>`;
+    }
+
+    // ─── Modal ────────────────────────────────────────────────────────────────
+
+    function openModal(id) {
+      const article = allArticles.find(a => a.id === id);
+      if (!article) return;
+
+      document.getElementById('modalCategory').textContent = article.category || '';
+      document.getElementById('modalCategory').className = `card-category ${categoryClass(article.category)}`;
+      document.getElementById('modalTitle').textContent = article.headline;
+      document.getElementById('modalSource').textContent = `${article.source} · ${formatDate(article.publishedAt)}`;
+      document.getElementById('modalBody').textContent = article.body || '';
+      document.getElementById('modalDate').textContent = formatDate(article.publishedAt);
+
+      const takeawayEl = document.getElementById('modalTakeaway');
+      if (article.keyTakeaway) {
+        document.getElementById('modalTakeawayText').textContent = article.keyTakeaway;
+        takeawayEl.style.display = 'block';
+      } else {
+        takeawayEl.style.display = 'none';
+      }
+
+      document.getElementById('modalTags').innerHTML =
+        (article.tags || []).map(t => `<span class="tag">${escHtml(t)}</span>`).join('');
+
+      const srcLink = document.getElementById('modalSourceLink');
+      srcLink.href = article.originalUrl || '#';
+
+      document.getElementById('modalOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(event) {
+      if (event && event.target !== document.getElementById('modalOverlay') && event.type !== 'click') return;
+      if (event && event.currentTarget === document.getElementById('modalOverlay') && event.target !== event.currentTarget) return;
+      document.getElementById('modalOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.getElementById('modalOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // ─── Filters ─────────────────────────────────────────────────────────────
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeFilter = btn.dataset.filter;
+        renderNews(allArticles);
+        revealElements();
+      });
+    });
+
+    // ─── Refresh ─────────────────────────────────────────────────────────────
+
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      const btn = document.getElementById('refreshBtn');
+      btn.classList.add('spinning');
+      loadNews().finally(() => btn.classList.remove('spinning'));
+    });
+
+    // ─── Reveal animation ────────────────────────────────────────────────────
+
+    function revealElements() {
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.reveal:not(.visible)').forEach((el, i) => {
+          setTimeout(() => el.classList.add('visible'), i * 60);
+        });
+      });
+    }
+
+    // ─── Utilities ───────────────────────────────────────────────────────────
+
+    function escHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      try {
+        return new Date(iso).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+      } catch { return ''; }
+    }
+
+    function formatRelativeTime(iso) {
+      if (!iso) return '';
+      const diff = Date.now() - new Date(iso).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 60) return `${mins}m ago`;
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return `${hours}h ago`;
+      return `${Math.floor(hours / 24)}d ago`;
+    }
+
+    // ─── Init ─────────────────────────────────────────────────────────────────
+
+    revealElements();
+    loadNews();
+  </script>
+</body>
+</html>

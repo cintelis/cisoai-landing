@@ -1139,7 +1139,7 @@
         }
         .footer-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr repeat(4, minmax(0, 1fr));
             gap: 48px;
             margin-bottom: 48px;
         }
@@ -1834,6 +1834,14 @@
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="/privacy.html">Privacy Policy</a></li>
                     <li><a href="/terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-heading">Partner Sites</div>
+                <ul class="footer-links">
+                    <li><a href="https://bugxhunter.com" target="_blank" rel="noopener">BugXHunter</a></li>
+                    <li><a href="https://adsoptimiser.com.au" target="_blank" rel="noopener">Ads Optimiser</a></li>
+                    <li><a href="https://easyqr.ai" target="_blank" rel="noopener">EasyQR AI</a></li>
                 </ul>
             </div>
         </div>
