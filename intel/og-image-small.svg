@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="314" viewBox="0 0 600 314">
+  <defs>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#080b0f"/>
+      <stop offset="100%" stop-color="#0a1220"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#00c8ff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#080b0f" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#00c8ff" stroke-width="0.4" stroke-opacity="0.10"/>
+    </pattern>
+    <filter id="glow-filter">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Base -->
+  <rect width="600" height="314" fill="url(#bg-grad)"/>
+  <rect width="600" height="314" fill="url(#glow)"/>
+  <rect width="600" height="314" fill="url(#grid)"/>
+
+  <!-- Left accent stripe -->
+  <rect x="0" y="0" width="4" height="314" fill="#00c8ff"/>
+
+  <!-- Corner brackets — 40px inset safe zone -->
+  <path d="M 55 45 L 55 28 L 72 28" fill="none" stroke="#00c8ff" stroke-width="1.2" opacity="0.7"/>
+  <path d="M 545 45 L 545 28 L 528 28" fill="none" stroke="#00c8ff" stroke-width="1.2" opacity="0.7"/>
+  <path d="M 55 269 L 55 286 L 72 286" fill="none" stroke="#00c8ff" stroke-width="1.2" opacity="0.7"/>
+  <path d="M 545 269 L 545 286 L 528 286" fill="none" stroke="#00c8ff" stroke-width="1.2" opacity="0.7"/>
+
+  <!-- CISO AI label top -->
+  <text x="300" y="52" font-family="Courier New,monospace" font-size="10" letter-spacing="6"
+    fill="#00c8ff" text-anchor="middle" opacity="0.7">// SECURITY UPDATES</text>
+
+  <!-- Main headline — centred for thumbnail cropping -->
+  <text x="300" y="128" font-family="Arial Black,Impact,sans-serif" font-size="52"
+    font-weight="900" fill="#e8f0f8" letter-spacing="-1" text-anchor="middle">THREAT &amp;</text>
+  <text x="300" y="182" font-family="Arial Black,Impact,sans-serif" font-size="52"
+    font-weight="900" fill="#00c8ff" letter-spacing="-1" text-anchor="middle" filter="url(#glow-filter)">COMPLIANCE</text>
+  <text x="300" y="232" font-family="Arial Black,Impact,sans-serif" font-size="52"
+    font-weight="900" fill="#00c8ff" letter-spacing="-1" text-anchor="middle">NEWS</text>
+
+  <!-- Subtext -->
+  <text x="300" y="266" font-family="Arial,sans-serif" font-size="12" font-weight="300"
+    fill="#8a9ab0" text-anchor="middle" letter-spacing="0.3">Plain-language cybersecurity news for Australian SMBs</text>
+
+  <!-- Domain -->
+  <text x="300" y="296" font-family="Courier New,monospace" font-size="10"
+    fill="#243447" text-anchor="middle" letter-spacing="4">CISOAI.AU/NEWS</text>
+
+  <!-- Live dot -->
+  <circle cx="542" cy="46" r="4" fill="#00ff88" opacity="0.9"/>
+</svg>
